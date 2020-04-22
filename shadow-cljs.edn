@@ -5,5 +5,5 @@
                    :asset-path "/js/main"
                    :modules    {:main {:init-fn io.pietermaes.wellplatedesign.client/init
                                        :entries [io.pietermaes.wellplatedesign.client]}}
-                   :devtools   {:after-load app.client/refresh
+                   :devtools   {:after-load io.pietermaes.wellplatedesign.client/refresh
                                 :preloads   [com.fulcrologic.fulcro.inspect.preload]}}}}
