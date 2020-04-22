@@ -1,0 +1,6 @@
+.cpcache
+.nrepl-port
+resources/public/js/main
+.shadow-cljs
+.direnv/
+node_modules/
