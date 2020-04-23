@@ -3,7 +3,8 @@
    [com.fulcrologic.fulcro.application :as app]
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
    [com.fulcrologic.fulcro.algorithms.tempid :as tempid]
-   [com.fulcrologic.fulcro.dom :as dom]))
+   [com.fulcrologic.fulcro.dom :as dom]
+   [com.fulcrologic.fulcro.mutations :refer [defmutation]]))
 
 (defn- collate
   [m x]
@@ -28,6 +29,8 @@
                        48 [6 8]
                        96 [8 12]
                        384 [16 24]})
+
+(def default-well-size 96)
 
 (defn rows+columns-for-size
   [size]
@@ -80,15 +83,36 @@
                              :fill "white"
                              :stroke "#cbd5e0"}))))))
 
+(defn set-plate-size*
+  [state-map size]
+  (-> state-map
+      (assoc-in [:options :options/size] size)))
 
-(defsc Root [this {:keys [plate] :as props}]
-  {:query [{:plate (comp/get-query WellPlate)}]
-   :initial-state (fn [_] {:plate (comp/get-initial-state WellPlate {:size 96})})}
+(defmutation set-plate-size
+  [{:keys [size]}]
+  (action [{:keys [state]}]
+          (swap! state set-plate-size* size)))
+
+(defsc Options [this {:options/keys [size]}]
+  {:query [:options/size]
+   :initial-state (fn [_] {:options/size default-well-size})}
+  (dom/select {:value (str size)
+               :onChange #(comp/transact! this [(set-plate-size {:size (int (.. % -target -value))})])}
+              (for [wp-size (keys well-plate-sizes)]
+                (dom/option {:value (str wp-size)}
+                            wp-size))))
+
+(def ui-options (comp/factory Options))
+
+(defsc Root [this {:keys [options] :as props}]
+  {:query [{:options (comp/get-query Options)}]
+   :initial-state (fn [_] {:options (comp/get-initial-state Options {})})}
   (dom/div (tw "bg-gray-100" "min-h-screen" "flex")
            (dom/div (tw "w-2/3" "flex")
                     (dom/div (tw "m-auto")
+                             (well-plate {:plate/size (:options/size options)})))
            (dom/div (tw "w-1/3" "bg-gray-300" "shadow-lg")
-                    "Sidebar")))
+                    (ui-options options))))
 
 (defn ^:export init
   "Shadow-cljs sets this up to be our entry-point function. See shadow-cljs.edn `:init-fn` in the modules of the main build."
