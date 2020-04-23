@@ -32,7 +32,9 @@
 (defn rows+columns-for-size
   [size]
   (if-let [[nrow ncol] (well-plate-sizes size)]
-    [(take nrow rows) (take ncol columns)]))
+    [(take nrow rows) (take ncol columns)]
+    (throw (ex-info "Unknown well size" {:size size
+                                         :acceptable (keys well-plate-sizes)}))))
 
 (defsc WellPlate [this {:plate/keys [id size]}]
   {:query [:plate/id :plate/size]
