@@ -111,7 +111,7 @@
            (dom/div (tw "w-2/3" "flex")
                     (dom/div (tw "m-auto")
                              (well-plate {:plate/size (:options/size options)})))
-           (dom/div (tw "w-1/3" "bg-gray-300" "shadow-lg")
+           (dom/div (tw "w-1/3" "bg-gray-300")
                     (ui-options options))))
 
 (defn ^:export init
