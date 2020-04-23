@@ -3,6 +3,16 @@
     [com.fulcrologic.fulcro.application :as app]
     [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
     [com.fulcrologic.fulcro.dom :as dom]))
+(defn- collate
+  [m x]
+  (cond
+    (string? x) (update m :classes conj x)
+    (map? x) (merge m x)
+    :else m))
+
+(defn tw
+  [& args]
+  (reduce collate {} args))
 
 (defonce app (app/fulcro-app))
 
