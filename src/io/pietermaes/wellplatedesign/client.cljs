@@ -36,11 +36,7 @@
     (throw (ex-info "Unknown well size" {:size size
                                          :acceptable (keys well-plate-sizes)}))))
 
-(defsc WellPlate [this {:plate/keys [id size]}]
-  {:query [:plate/id :plate/size]
-   :initial-state (fn [{:keys [size] :as params}] {:plate/id (tempid/tempid)
-                                                   :plate/size size})
-   :ident [:plate/by-id :plate/id]}
+(defn well-plate [{:plate/keys [id size]}]
   (let [[rows columns] (rows+columns-for-size size)
         padding 8
         radius 10
@@ -84,7 +80,6 @@
                              :fill "white"
                              :stroke "#cbd5e0"}))))))
 
-(def ui-well-plate (comp/factory WellPlate))
 
 (defsc Root [this {:keys [plate] :as props}]
   {:query [{:plate (comp/get-query WellPlate)}]
@@ -92,7 +87,6 @@
   (dom/div (tw "bg-gray-100" "min-h-screen" "flex")
            (dom/div (tw "w-2/3" "flex")
                     (dom/div (tw "m-auto")
-                             (ui-well-plate plate)))
            (dom/div (tw "w-1/3" "bg-gray-300" "shadow-lg")
                     "Sidebar")))
 
