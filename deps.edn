@@ -1,4 +1,4 @@
-{:paths   ["src" "resources"]
+{:paths   ["src" "src/js" "resources"]
  :deps    {org.clojure/clojure    {:mvn/version "1.10.1"}
            com.fulcrologic/fulcro {:mvn/version "3.0.10"}}
 

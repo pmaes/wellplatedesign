@@ -4,7 +4,19 @@
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
    [com.fulcrologic.fulcro.algorithms.tempid :as tempid]
    [com.fulcrologic.fulcro.dom :as dom]
-   [com.fulcrologic.fulcro.mutations :refer [defmutation]]))
+   [com.fulcrologic.fulcro.mutations :refer [defmutation]]
+   ["/clingo" :as clingo]))
+
+(def c
+  (clingo #js {:locateFile (fn [name]
+                             "clingo.wasm")}))
+
+(defn run
+  [clingo asp opts]
+  (.ccall clingo "run" "number" #js ["string", "string"] #js [asp opts]))
+
+(.then c (fn [c]
+           (run c "sudoku(1..100)." "--outf=2")))
 
 (defn- collate
   [m x]
